@@ -1,0 +1,104 @@
+paths:
+  raw_data_root: "data/raw"
+  processed_root: "data/processed"
+  normalised_dir: "data/processed/normalised"
+  chunks_dir: "data/processed/chunks"
+  embeddings_dir: "data/processed/embeddings"
+  faiss_dir: "data/processed/faiss"
+  ocr_cache_dir: "data/processed/ocr_cache"
+  log_dir: "logs"
+
+datasets:
+  funsd:
+    path: "funsd"
+    format: "dataset_dict"
+    splits: ["train", "test"]
+    description: "FUNSD form understanding"
+  docvqa:
+    path: "docvqa"
+    format: "dataset"
+    description: "DocVQA subset"
+  rvl_cdip:
+    path: "rvl_cdip"
+    format: "dataset"
+    description: "RVL-CDIP subset"
+
+ocr:
+  engine: "tesseract"
+  tesseract_lang: "eng"
+  paddleocr_lang: "en"
+  paddleocr_use_openvino: true
+  preprocess: true
+  confidence_threshold: 40
+
+chunking:
+  strategy: "fixed"
+  chunk_size: 512
+  chunk_overlap: 64
+  min_chunk_length: 30
+
+llm:
+  model: "gemma:7b"
+  provider: "ollama"
+  temperature: 0.3
+  top_p: 0.9
+
+embeddings:
+  model_name: "BAAI/bge-small-en-v1.5"
+  dimension: 384
+  batch_size: 64
+  device: "cpu"
+  normalise: true
+
+faiss:
+  index_type: "IndexFlatIP"
+  nprobe: 10
+
+retrieval:
+  top_k: 5
+  score_threshold: 0.0
+  bm25_enabled: false
+
+llm:
+  provider: "ollama"
+  model: "mistral"
+  endpoint: "http://localhost:11434"
+  temperature: 0.3
+  max_tokens: 512
+  timeout_seconds: 120
+
+runtime:
+  edge_mode: false
+  latency_monitoring: true
+
+openvino:
+  enabled: true
+  device: "ADAPTIVE"
+  adaptive:
+    enabled: true
+    benchmark_iterations: 3
+    prefer_order: ["GPU", "NPU", "CPU"]
+  embedding_model_ir: "models/ov/bge-small-en-v1.5/model.xml"
+  llm_model_dir: "models/ov/mistral-7b-instruct"
+
+video:
+  dataset_name: "msrvtt"
+  video_data_root: "data/raw/msrvtt"
+  enable_whisper: false
+  frame_interval: 2
+  whisper_model_size: "small"
+  whisper_device: "cpu"
+  enable_frame_ocr: true
+  ocr_min_words: 3
+  chunk_interval: 30
+  enable_frame_captioning: true
+  caption_interval: 5
+  caption_model: "Salesforce/blip-image-captioning-base"
+  caption_use_openvino: false
+  output_dir: "data/processed/videos"
+
+clip:
+  enabled: true
+  model_name: "openai/clip-vit-base-patch32"
+  dimension: 512
+  use_openvino: true

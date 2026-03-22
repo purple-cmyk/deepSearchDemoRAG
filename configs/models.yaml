@@ -1,0 +1,47 @@
+models:
+  embedding:
+    name: "bge-small-en-v1.5"
+    source: "BAAI/bge-small-en-v1.5"
+    purpose: "Dense text embeddings for semantic retrieval (384-d, English)."
+    dimension: 384
+    max_sequence_length: 512
+    runtime: "sentence-transformers"
+    openvino_export: "models/ov/bge-small-en-v1.5/model.xml"
+    size_mb: 130
+    licence: "MIT"
+
+  llm:
+    name: "Mistral-7B-Instruct"
+    source: "ollama pull mistral"
+    purpose: "Grounded answer generation from retrieved context."
+    parameters: "7B"
+    quantisation: "Q4_0 (Ollama) or INT4 (OpenVINO export)"
+    runtime: "ollama"
+    openvino_export: "models/ov/mistral-7b-instruct"
+    vram_mb: 4200
+    licence: "Apache-2.0"
+
+  ocr_tesseract:
+    name: "Tesseract OCR"
+    source: "system package"
+    purpose: "Text from scanned pages and video frames."
+    runtime: "pytesseract"
+
+  ocr_paddle:
+    name: "PaddleOCR"
+    source: "paddleocr"
+    purpose: "Higher-accuracy OCR with layout cues."
+    runtime: "paddleocr"
+
+  clip:
+    name: "CLIP ViT-B/32"
+    source: "openai/clip-vit-base-patch32"
+    purpose: "Shared image-text space for multimodal retrieval."
+    dimension: 512
+    runtime: "transformers"
+
+  reranker:
+    name: "bge-reranker-base"
+    source: "BAAI/bge-reranker-base"
+    purpose: "Cross-encoder re-ranking of retrieval candidates."
+    runtime: "sentence-transformers"
